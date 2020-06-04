@@ -13,7 +13,7 @@ __version__ = "0.0.1"
 #
 #############################################################
 
-def print_d(**kwargs):
+def print_d(d,db,a,b,**kwargs):
   """
   prints the matrix d in dynamic programming.
   Assumes variables d, a, b, m, n, and optionally db.
@@ -26,34 +26,37 @@ def print_d(**kwargs):
   style = kwargs.get("style", None)
   edu = kwargs.get("edu", None)
 
+  m=len(a)
+  n=len(a)
+
   if not d:
     print("Matrix d must be defined to use print_d.")
     return
 
   if path:
-    paths = getPaths(m,n)
+    paths = getPaths(db,m,n)
     if path=="one": paths=paths[:1]
     for p in paths:
-      print("\n\nMatrix d for alignment\n%s\n\n"%(path2str(p)))
+      print("\n\nMatrix d for alignment\n%s\n\n"%(path2str(a,b,p)))
     if style == "str":
-      print("%s\n\n"%(d2str(path=p))) 
+      print("%s\n\n"%(d2str(d,db,a,b,m,n,path=p))) 
     else:
-      d2png(path=p)
+      d2png(d,db,a,b,m,n,path=p)
   else:
     print("\n\nMatrix d\n")
     if style == "str":
-      print("%s\n\n"%(d2str())) 
+      print("%s\n\n"%(d2str(d,db,a,b,m,n))) 
     else:
-      d2png()
+      d2png(d,db,a,b,m,n)
 
   if edu:
     if edu=="all":
-      d2png(edu="init") # d and db as pretty picture with color
-      d2png(edu="main") # d and db as pretty picture with color
-      d2png(edu="result") # d and db as pretty picture with color
-      d2png(edu="ij") # d and db as pretty picture with color
+      d2png(d,db,a,b,m,n,edu="init") # d and db as pretty picture with color
+      d2png(d,db,a,b,m,n,edu="main") # d and db as pretty picture with color
+      d2png(d,db,a,b,m,n,edu="result") # d and db as pretty picture with color
+      d2png(d,db,a,b,m,n,edu="ij") # d and db as pretty picture with color
     else:
-      d2png(edu=edu)
+      d2png(d,db,a,b,m,n,edu=edu)
 
 
 
@@ -64,7 +67,7 @@ def print_d(**kwargs):
 #
 #############################################################
 
-def str_ij(i,j, **kwargs): 
+def str_ij(d,db,i,j, **kwargs): 
   """returns the contents of cell i,j in d and d_b 
   as a string"""
   style = kwargs.get("style", None)
@@ -85,7 +88,7 @@ def str_ij(i,j, **kwargs):
 #
 #############################################################
 
-def d2str(**kwargs):
+def d2str(d,db,a,b,m,n,**kwargs):
   """
   returns the matrix d and d_b as string.
   String b is printed as first row and string a as first column.
@@ -101,7 +104,7 @@ def d2str(**kwargs):
   for i in range(0,m+1):
     row = [(" "+a)[i]]
     for j in range(0,n+1):
-      s = str_ij(i,j, style="plain")
+      s = str_ij(d,db,i,j, style="plain")
       if path and (i,j) in path: s = "* "+s
       row.append(s)
     rows.append(row)
@@ -115,7 +118,7 @@ def d2str(**kwargs):
 #
 #############################################################
 
-def d2png(**kwargs):
+def d2png(d,db,a,b,m,n,**kwargs):
   path = kwargs.get("path", None)
   edu = kwargs.get("edu", None)
   fig, ax = plt.subplots()
@@ -125,8 +128,7 @@ def d2png(**kwargs):
   for i in range(m+1):
     for j in range(n+1):
         if (i,j) in d and (i,j) in db:
-          c = dir2str(db[i,j])+" "+str(d[i,j])  
-          cell_text[i][j+1] = c
+          cell_text[i][j+1] = str_ij(d,db,i,j)
   the_table = ax.table(cellText=cell_text,
                        cellColours=colors,
                        colLabels=columns,
@@ -190,7 +192,7 @@ def d2png(**kwargs):
 #
 #############################################################
 
-def getPaths(i,j):
+def getPaths(db,i,j):
   """
   returns alls paths from bottom right to top left in db.
   """
@@ -198,16 +200,16 @@ def getPaths(i,j):
     return [[(0,0)]]
   paths = []
   if "N" in db[i,j]:
-    paths += getPaths(i-1,j)
+    paths += getPaths(db,i-1,j)
   if "W" in db[i,j]:
-    paths += getPaths(i,j-1)
+    paths += getPaths(db,i,j-1)
   if "NW" in db[i,j]:
-    paths += getPaths(i-1,j-1)
+    paths += getPaths(db,i-1,j-1)
   for path in paths:
     path.append((i,j))
   return paths
 
-def path2str(path):
+def path2str(a,b,path):
   """prints the alignment corresponding to a given path through the matrix d."""
   (s1,s2) = zip(*path)
   line1 = "  "+"".join([get_char(s1,a,x) for x in range(1,len(s1))])
