@@ -1,6 +1,10 @@
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 
+__all__ = ["print_d"]
+__version__ = "0.0.1"
+
+
 #############################################################
 #
 # Code for pretty printing of d and db
