@@ -11,7 +11,7 @@ setuptools.setup(
     description="Code to print matrices for the applied bioinformatics lecture.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/ms-bioinf/print_d",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
