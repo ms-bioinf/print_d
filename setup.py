@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="ms-bioinf", # Replace with your own username
+    name="print_d", # Replace with your own username
     version="0.0.1",
     author="Michael Schroeder",
     author_email="ms@biotec.tu-dresden.de",
