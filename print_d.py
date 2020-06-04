@@ -40,6 +40,7 @@ def print_d(d,db,a,b,**kwargs):
 
   if path:
     paths = getPaths(db,m,n)
+    print(paths)
     if path=="one": paths=paths[:1]
     for p in paths:
       print("\n\nMatrix d for alignment\n%s\n\n"%(path2str(a,b,p)))
